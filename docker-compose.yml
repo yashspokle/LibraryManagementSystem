@@ -1,0 +1,61 @@
+services:
+
+  mysql:
+    image: mysql:8.4
+
+    container_name: mysql-container
+
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bookdb
+
+    ports:
+      - "3307:3306"
+
+    networks:
+      - library-network
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+
+    container_name: backend-container
+
+    restart: always
+
+    ports:
+      - "8081:8081"
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/bookdb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+
+    networks:
+      - library-network
+
+  frontend:
+    build: ./frontend
+
+    container_name: frontend-container
+
+    ports:
+      - "5173:5173"
+
+    depends_on:
+      - backend
+
+    networks:
+      - library-network
+
+networks:
+  library-network:
