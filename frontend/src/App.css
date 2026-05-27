@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.c {
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 10px;
+  margin: 10px;
+  text-align: center;
+  width: 300px;
+  height: 300px;
+}
+
+.photo {
+  height: 100px;
+  width: 100px;
+  object-fit: contain;
+}
